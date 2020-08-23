@@ -1,6 +1,7 @@
 
 var weather = require('./weather.js');
 var location =  require('./location.js');
+const { array } = require('yargs');
 
 
 var argv = require('yargs')
@@ -12,21 +13,37 @@ var argv = require('yargs')
     })
     .help('help')
     .argv;
-
 //console.log(argv.location);
 
 if (argv.l){
     console.log('Location input by user')
-    weather(argv.l, function(currentWeather){})
+    weather(argv.l).then (function (currentWeather){
+        console.log(currentWeather);
+    }).catch(function (error) {
+        console.log (error);
+    })
+    //weather(argv.l, function(currentWeather){})
 }
 
 else {
-    location(function(location){
-        console.log('Location fetched from IP')
-        weather(location.city, function(currentWeather){})
+    console.log('Location fetched from IP');
+    location().then(function (location){
+        return weather(location.city);
+    }).then (function (currentWeather){
+        console.log(currentWeather);
+    }).catch(function (error){
+        console.console.log (error);
     })
 }
-/*weather(function (currentWeather){
+
+    //location(function(location){
+    //    console.log('Location fetched from IP')
+    //    weather(location.city, function(currentWeather){})
+    //})
+//}
+//...........................................................................................................................
+/*
+weather(function (currentWeather){
 console.log(currentWeather);
 
 });
